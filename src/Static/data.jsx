@@ -1,3 +1,157 @@
+import { RxDashboard } from 'react-icons/rx'
+import { AiFillAmazonSquare } from 'react-icons/ai'
+import { FaShopify, FaMoneyCheckAlt } from 'react-icons/fa'
+import { FcCustomerSupport } from 'react-icons/fc'
+import { MdReviews } from 'react-icons/md'
+import { LuSettings } from 'react-icons/lu'
+import { GiStairsGoal } from 'react-icons/gi'
+import { GiDarkSquad } from 'react-icons/gi'
+
+import { IoNotificationsOutline, MdDarkMode, BsFillSearchHeartFill, RiMessengerLine, SiDarkreader } from './Icon'
+
+export const topNav = [
+  {
+    label: "Search",
+    icon: BsFillSearchHeartFill
+  },
+  {
+    label: 'Darkmode',
+    icon: MdDarkMode,
+  },
+  {
+    label: 'Notification',
+    icon: IoNotificationsOutline,
+    active: true,
+  },
+  {
+    label: 'Message',
+    icon: RiMessengerLine,
+    active: true
+  },
+  {
+    label: 'Login',
+    icon: SiDarkreader,
+    path: '/Dashboard',
+  },
+]
+// sidebar navigaion
+export const asideData = [
+  {
+    title: 'Dashborad',
+    active: true,
+    icon: RxDashboard,
+    subMenu: [
+      {
+        title: 'Sales Analytics',
+        path: '/dashboard',
+        active: true
+      },
+      {
+        title: 'Seller List',
+        path: '/dashboard/seller-list',
+        active: false
+      },
+      {
+        title: 'Seller Table',
+        path: '/dashboard/seller-table',
+        active: false
+      },
+      {
+        title: 'Seller Grid',
+        path: '/dashboard/seller-grid',
+        active: false
+      },
+      {
+        title: 'Revenue by Period',
+        path: '/dashboard/revenue-period',
+        active: false
+      }
+    ]
+
+  },
+  {
+    title: 'Products',
+    active: false,
+    icon: AiFillAmazonSquare,
+    subMenu: [
+      {
+        title: 'Top Products',
+        active: false,
+        path: '/dashboard/top-product'
+      },
+      {
+        title: 'Products Grid',
+        active: false,
+        path: '/dashboard/product-grid'
+      },
+      {
+        title: 'Products Management',
+        active: false,
+        path: '/dashboard/product-management'
+      },
+      {
+        title: 'Product Upload',
+        active: false,
+        path: '/dashboard/product-upload'
+      }
+    ]
+  },
+  {
+    title: 'Orders',
+    icon: FaShopify,
+    subMenu: [
+      {
+        title: 'Order Details',
+        path: '/dashboard/order-deatils'
+      },
+      {
+        title: 'Order Item',
+        path: '/dashboard/order-item'
+      },
+      {
+        title: 'Order Management ',
+        path: '/dashboard/order-management'
+      },
+      {
+        title: 'Order History',
+        path: '/dashboard/order-history'
+      }
+    ]
+  },
+  {
+    title: 'Statistic',
+    icon: GiStairsGoal,
+    path: '/dashboard/statistic'
+  },
+  {
+    title: 'Customer',
+    icon: GiDarkSquad,
+    path: '/dashboard/Customer'
+  },
+  {
+    title: "Reviews",
+    icon: MdReviews,
+    path: '/dashboard/reviews'
+  },
+  {
+    title: "Transations",
+    path: '/dashboard/transation',
+    icon: FaMoneyCheckAlt,
+  },
+  {
+    title: 'Help Center',
+    icon: FcCustomerSupport,
+    path: '/dashboard/help-support'
+  },
+  {
+    title: "Setting",
+    path: '/dashboard/setting',
+    icon: LuSettings,
+  }
+]
+
+
+
 // navigation Data
 export const navItems = [
   {
@@ -54,13 +208,6 @@ export const pCategoryList = {
 }
 
 
-// promotion title
-// const promotion = [
-//   { label: 'Category', value: 'category1' }
-// ]
-
-// // product type 
-// const productsType = [{ label: 'All Products' }, { label: "New Arrivals" }, { label: "Featured" }]
 
 
 // branding data
@@ -214,62 +361,62 @@ export const categoriesData = [
   {
     id: 1,
     title: "Computers and Laptops",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
   },
   {
     id: 2,
     title: "cosmetics and body care",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://indian-retailer.s3.ap-south-1.amazonaws.com/s3fs-public/2021-07/kosme1.png",
   },
   {
     id: 3,
     title: "Accesories",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories_335657-2345.jpg?w=2000",
   },
   {
     id: 4,
     title: "Cloths",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://www.shift4shop.com/2015/images/industries/clothing/clothing-apparel.png",
   },
   {
     id: 5,
     title: "Shoes",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvBQPQMVNRd6TtDkGs2dCri0Y-rxKkFOiEWw&usqp=CAU",
   },
   {
     id: 6,
     title: "Gifts",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png",
   },
   {
     id: 7,
     title: "Pet Care",
-    subTitle: "",
+    title: "",
     image_Url: "https://cdn.openpr.com/T/c/Tc15444071_g.jpg",
   },
   {
     id: 8,
     title: "Mobile and Tablets",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://st-troy.mncdn.com/mnresize/1500/1500/Content/media/ProductImg/original/mpwp3tua-apple-iphone-14-256gb-mavi-mpwp3tua-637986832343472449.jpg",
   },
   {
     id: 9,
     title: "Music and Gaming",
-    subTitle: "",
+    title: "",
     image_Url:
       "https://static.vecteezy.com/system/resources/previews/011/996/555/original/3d-black-headphone-illustration-ecommerce-icon-png.png",
   },

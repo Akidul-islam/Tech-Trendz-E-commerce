@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../Components/Layout/Header";
 import { productData } from "../Static/data";
 import { useSearchParams } from "react-router-dom";

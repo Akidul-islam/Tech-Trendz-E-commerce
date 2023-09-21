@@ -38,7 +38,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { API } from "./Redux/features/Auth";
 import { useEffect } from "react";
 // Admin component
-import { ProductEditor, CostomerManagement } from './Pages/admin/indexPage'
+import { ProductUpload, CostomerManagement, Overview } from './Pages/admin/indexPage'
 import ProtectRoute from "./Components/common/ProtectRoute";
 import UnAuthorizedPage from "./Pages/auth/UnAuthorizedPage";
 
@@ -68,8 +68,8 @@ const App = () => {
 
         {/* Admin section */}
         <Route path="admin" element={<ProtectRoute />} >
-          <Route index element={<ProductEditor />} />
-          <Route path="product-edit" element={<ProductEditor />} />
+          <Route index element={<Overview />} />
+          <Route path="product-upload" element={<ProductUpload />} />
           <Route path="customer-user" element={<CostomerManagement />} />
         </Route>
 
