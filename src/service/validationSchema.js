@@ -49,4 +49,16 @@ const userLogin = yup.object().shape({
     .min(8, 'Password must be at least 8 characters'),
 });
 
-export { registerSchema, userLogin };
+// product form validation
+const productValidate = () => {
+  return yup.object().shape({
+    productName: yup.string().required('name required'),
+    productType: yup.string().required('type  required'),
+    brand: yup.string().required('field Required'),
+    regularPrice: yup.number().required('field required'),
+    salesPrice: yup.number().required('field is required'),
+    stock: yup.number().required('field is required'),
+  });
+};
+
+export { registerSchema, userLogin, productValidate };

@@ -10,8 +10,8 @@ const ImageCard = ({ register, name, handler }) => {
             </div>
             <input
                 className="absolute z-10 top-1/2  scale-[10] opacity-0"
-
                 type="file"
+                multiple
                 {...register(name, { onChange: handler })}
             />
         </div>

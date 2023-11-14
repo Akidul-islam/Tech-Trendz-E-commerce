@@ -1,8 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { pCategoryList } from '../../Static/data';
 
+// const product = {
+//   create: createAsyncThunk('product/create', async (data, thunkAPI) => {
+//     try {
+//       return await firebaseConfig.ProductUpload(data);
+//     } catch (error) {
+//       console.log(error.message);
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }),
+// };
+
 const productFormSlice = createSlice({
-  name: 'product-form',
+  name: 'product',
   initialState: {
     mainCategory: pCategoryList.mainCategory,
     sub_category: pCategoryList.sub_category[0]['category'],

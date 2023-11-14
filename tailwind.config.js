@@ -18,6 +18,9 @@ export default {
       colors: {
         h5: '#00193b',
       },
+      width: {
+        size: "calc('100%' - '300px')",
+      },
     },
   },
   plugins: [],

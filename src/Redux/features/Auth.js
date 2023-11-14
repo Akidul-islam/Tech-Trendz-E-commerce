@@ -63,9 +63,16 @@ export const API = {
 };
 
 const initialState = {
-  isAuthenticate: false,
+  isAuthenticate: true,
   tempUser: null,
-  user: null,
+  user: {
+    name: 'Md. Akidul Islam',
+    email: 'Akidul islam',
+    phoneNumber: '0173456892',
+    photoURL:
+      'https://downloadr2.apkmirror.com/wp-content/uploads/2020/06/19/5ef4ca6f76dfa.png',
+    roles: 'admin',
+  },
   isLoading: false,
   isSuccess: false,
   isLogout: false,

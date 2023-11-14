@@ -16,7 +16,19 @@ import {
   updateEmail,
   updatePassword,
 } from 'firebase/auth';
-import { getFirestore, getDoc, setDoc, doc } from 'firebase/firestore';
+import {
+  getFirestore,
+  getDoc,
+  setDoc,
+  doc,
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+} from 'firebase/firestore';
 import {
   getStorage,
   ref,
@@ -66,7 +78,7 @@ class Firebase {
       phoneNumber,
     });
     //   user profile create
-    await this.docModelCreate('Users', user.uid, {
+    await this.addModelByID('Users', user.uid, {
       userId: user.uid,
       name: user.displayName || displayName,
       email: user.email,
@@ -94,30 +106,6 @@ class Firebase {
   }
 
   // upload image firebase fire store and download img URL
-  async imageUpload(img, pathName) {
-    if (!img) {
-      return;
-    }
-
-    const storageRef = ref(this.storage, pathName);
-    const uploadTask = uploadBytesResumable(storageRef, img);
-
-    await new Promise((resolve, reject) => {
-      uploadTask.on(
-        'state_changed',
-        () => {},
-        (error) => {
-          reject(error);
-        },
-        () => {
-          resolve();
-        }
-      );
-    });
-
-    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-    return downloadURL;
-  }
 
   //user Profile update
   async userUpdateProfile({
@@ -138,9 +126,9 @@ class Firebase {
       const update = await updatePassword(user, password);
       console.log('password', update);
     }
-    const storeRef = `Users/${avater}`;
     let imgUrl = '';
     if (avater) {
+      const storeRef = `Users/${avater}`;
       imgUrl = await this.imageUpload(avater, storeRef);
     }
     await updateProfile(user, {
@@ -154,7 +142,7 @@ class Firebase {
   async googleLogin() {
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(this.auth, provider);
-    await this.docModelCreate('users', user.uid, {
+    await this.addModelByID('users', user.uid, {
       userId: user.uid,
       name: user.displayName,
       email: user.email,
@@ -208,15 +196,19 @@ class Firebase {
   }
 
   // creadiential
-
   async logOut() {
     await signOut(this.auth);
     await setPersistence(this.auth, browserSessionPersistence);
   }
 
-  // addData
-  docModelCreate(model, docId, data) {
+  // addDoc and set ID manually
+  addModelByID(model, docId, data) {
     return setDoc(doc(this.database, model, docId), data);
+  }
+
+  // add doc and ID auto generate
+  addModel(model, data) {
+    return addDoc(collection(this.database, model), data);
   }
 
   // getData by id
@@ -224,6 +216,66 @@ class Firebase {
     const user = await getDoc(doc(this.database, model, docId));
     // if(!user.exists) return console.log()
     return user.data();
+  }
+
+  // get all products
+  async getProducts(model, query) {
+    const q = query(collection(this.database, model), limit(2));
+    let productList = [];
+    const unsubscribe = onSnapshot(q, (query) => {
+      query.forEach((product) => {
+        productList.push({ ...product.data(), product_id: product.id });
+      });
+    });
+
+    // let productList = [];
+    // const products = await getDocs(q);
+    // products.forEach((item) => {
+    //   const product = item.data();
+    //   productList.push({ ...product, id: item.id });
+    // });
+    return { productList, unsubscribe };
+  }
+
+  // upload single image
+  async imageUpload(file, pathName) {
+    if (!file) {
+      return;
+    }
+    const storageRef = ref(this.storage, pathName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    await new Promise((resolve, reject) => {
+      uploadTask.on(
+        'state_changed',
+        () => {},
+        (error) => {
+          reject(error);
+        },
+        () => {
+          resolve();
+        }
+      );
+    });
+    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+    return downloadURL;
+  }
+
+  async ProductUpload(product) {
+    delete product.type;
+    delete product.value;
+    let url = [];
+    if (product.images) {
+      const items = Array.from(product.images);
+      url = await Promise.all(
+        items.map(
+          async (file) => await this.imageUpload(file, `Images/${file.name}`)
+        )
+      );
+    }
+
+    // upload product
+    await this.addModel('Products', { ...product, images: url });
   }
 }
 

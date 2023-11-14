@@ -6,6 +6,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .nav-icon-btn {
+    @apply text-teal-700/90  shadow-sm px-2 py-1 rounded-sm text-2xl duration-200 ease-in hover:text-teal-600;
+  }
+}
+
 *::-webkit-scrollbar {
   width: 0;
 }
@@ -71,4 +77,13 @@ input[type='number'] {
 
 .product-configration {
   @apply grid grid-cols-2 gap-2;
+}
+
+@media screen and (min-width: 768px) {
+  .size-of-width {
+    width: calc(100% - 300px);
+  }
+  .inactive-size {
+    width: calc(100% - 80px);
+  }
 }
