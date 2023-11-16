@@ -2,14 +2,23 @@ import {} from 'prop-types';
 import HomeNavber from '../Components/navigation/HomeNavbar';
 import { Outlet } from 'react-router-dom';
 import useFetchProduct from '../hook/useFetchProduct';
-
+import Loader from '../Components/common/Loader';
+import { useTypeSelector } from '../Redux/Store';
 const HomeLayout = () => {
-  const products = useFetchProduct('Products');
-  console.log(products);
+  useFetchProduct('Products');
+  const isLoading = useTypeSelector((state) => state.modal.isLoading);
   return (
-    <div>
+    <div className='relative'>
       <HomeNavber />
-      <Outlet />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          {' '}
+          <Outlet />
+        </div>
+      )}
+      {/* <Loader /> */}
     </div>
   );
 };

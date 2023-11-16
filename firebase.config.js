@@ -219,22 +219,24 @@ class Firebase {
   }
 
   // get all products
-  async getProducts(model, query) {
-    const q = query(collection(this.database, model), limit(2));
-    let productList = [];
-    const unsubscribe = onSnapshot(q, (query) => {
-      query.forEach((product) => {
-        productList.push({ ...product.data(), product_id: product.id });
-      });
+  async getProducts(model) {
+    return new Promise((resolve, reject) => {
+      const q = query(collection(this.database, model));
+      const unsubscribe = onSnapshot(
+        q,
+        (query) => {
+          let productList = [];
+          query.forEach((product) => {
+            productList.push({ ...product.data(), product_id: product.id });
+          });
+          resolve(productList);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+      return unsubscribe;
     });
-
-    // let productList = [];
-    // const products = await getDocs(q);
-    // products.forEach((item) => {
-    //   const product = item.data();
-    //   productList.push({ ...product, id: item.id });
-    // });
-    return { productList, unsubscribe };
   }
 
   // upload single image
