@@ -1,88 +1,47 @@
-import { useEffect, useState } from 'react';
-
-// react libraries
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-// react icons
+import { ToastContainer } from 'react-toastify';
 import {
-  AiFillHeart,
   AiFillStar,
   AiOutlineEye,
   AiOutlineHeart,
   AiOutlineShoppingCart,
   AiOutlineStar,
 } from 'react-icons/ai';
-
-// manually imported components
-import ProductDetailsCart from './ProductDetailsCart';
 import styles from '../../Styles/Style';
-import { removeFromWishlist, addToWishlist } from '../../Redux/WishlistAction';
-import { addTocart } from '../../Redux/CartAction';
-
-const Product = ({ data }) => {
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const { cart } = useSelector((state) => state.cart);
-  const dispatch = useDispatch();
-
-  const [click, setClick] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const d = data.name;
-  const product_name = d.replace(/\s+/g, '-');
-
-  useEffect(() => {
-    if (wishlist && wishlist.find((item) => item.id === data.id)) {
-      setClick(true);
-    } else {
-      setClick(false);
-    }
-  }, [wishlist]);
-
-  const handleWishlistRemoveItem = (data) => {
-    setClick(!click);
-    dispatch(removeFromWishlist(data));
-  };
-
-  const handleWishlistAddItem = (data) => {
-    setClick(!click);
-    dispatch(addToWishlist(data));
-  };
-
-  // handle add to cart item
-  const handleAddToCart = (id) => {
-    const isItemExists = cart.find((item) => item.id === id);
-    if (isItemExists) {
-      toast.error('Item already in exist');
-    } else {
-      dispatch(addTocart(data));
-      toast.success('Item added to cart');
-    }
-  };
-
+import { lazy, Suspense } from 'react';
+const LazyImage = lazy(() => import('../common/LazyImages'));
+import Image from '../common/LazyImages';
+import { Typography } from '@material-tailwind/react';
+const ProductCard = ({
+  productName,
+  regularPrice,
+  brand,
+  product_id,
+  stock,
+  images,
+  blur,
+}) => {
   return (
-    <div className='bg-white rounded-lg shadow-sm w-full h-[330px] relative p-3 cursor-pointer'>
-      <div className='flex justify-end'></div>
+    <div
+      className={`bg-white rounded-lg shadow-sm w-full h-[330px] relative p-3 cursor-pointer ${
+        blur && 'blur-sm'
+      }`}
+    >
+      {/* <div className='flex justify-end'></div> */}
 
-      <Link to={`/product/${product_name}`}>
-        <img
-          src={data.image_Url[0].url}
-          alt='product/image'
-          className='w-full object-contain select-none h-[130px]'
-        />
+      <Link to={`/product/${product_id}`}>
+        <Suspense fallback={<Image />}>
+          <LazyImage img={images[0]} alt={productName} />
+        </Suspense>
       </Link>
-
-      <Link to={`/`}>
-        <h5 className={`${styles.shop_name} select-none py-3`}>
-          {data.shop.name}
-        </h5>
-      </Link>
-
-      <Link to={`/product/${product_name}`}>
+      <Typography className='text-teal-400 opacity-80' variant='h6'>
+        {brand}
+      </Typography>
+      <Link to={`/product/${product_id}`}>
         <h4 className='pb-3 font-[500]'>
-          {data.name.length > 40 ? data.name.slice(0, 40) + '...' : data.name}
+          {productName.length > 40
+            ? productName.slice(0, 40) + '...'
+            : productName}
         </h4>
 
         <div className='flex select-none'>
@@ -117,25 +76,27 @@ const Product = ({ data }) => {
       <div className='py-2 flex items-center select-none justify-between'>
         <div className='flex'>
           <h5 className={`${styles.productDiscountPrice}`}>
-            ${data.price === 0 ? data.price : data.discount_price}
+            {/* ${data.price === 0 ? data.price : data.discount_price} */}
+            {regularPrice}
           </h5>
 
           <h4 className={`${styles.price}`}>
-            {data.price ? '$' + data.price : null}
+            {/* {data.price ? '$' + data.price : null} */}
+            {regularPrice}
           </h4>
         </div>
         <span className='font-[400] text-[17px] text-[#68d384]'>
-          {data.total_sell} sold
+          {stock || 0} sold
         </span>
       </div>
 
       {/* side panel */}
       <div>
-        {click ? (
+        {/* {click ? (
           <AiFillHeart
             size={22}
             color={click ? 'red' : '#333'}
-            onClick={() => handleWishlistRemoveItem(data)}
+            // onClick={() => handleWishlistRemoveItem(data)}
             className='absolute cursor-pointer top-8 right-3'
             title='Remove to wishlist'
           />
@@ -147,7 +108,14 @@ const Product = ({ data }) => {
             className='absolute top-8 right-3'
             title='Add to wishlist'
           />
-        )}
+        )} */}
+        <AiOutlineHeart
+          size={22}
+          color='#333'
+          //   onClick={() => handleWishlistAddItem(data)}
+          className='absolute top-8 right-3'
+          title='Add to wishlist'
+        />
 
         <AiOutlineEye
           size={22}
@@ -163,11 +131,11 @@ const Product = ({ data }) => {
             color='#333'
             className='absolute top-24 right-3 cursor-pointer'
             title='Add to cart'
-            onClick={() => handleAddToCart(data?.id)}
+            // onClick={() => handleAddToCart(data?.id)}
           />
         </Link>
 
-        {open ? <ProductDetailsCart setOpen={setOpen} data={data} /> : null}
+        {/* {open ? <ProductDetailsCart setOpen={setOpen} data={data} /> : null} */}
       </div>
 
       {/* toast message */}
@@ -187,4 +155,6 @@ const Product = ({ data }) => {
   );
 };
 
-export default Product;
+ProductCard.propTypes = {};
+
+export default ProductCard;

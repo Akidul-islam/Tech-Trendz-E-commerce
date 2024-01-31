@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import firebaseConfig from '../../../firebase.config';
 import { getError, loadStart, loadStop } from './ModalSlice';
 // import axios from 'axios';
 
@@ -12,12 +11,11 @@ const initialState = {
 
 export const fetchProducts = createAsyncThunk(
   'cart/products',
-  async (_, { dispatch, rejectWithValue }) => {
+  async (query, { dispatch, rejectWithValue }) => {
     try {
       dispatch(loadStart());
-      const products = await firebaseConfig.getProducts('Products');
+      // const products = await firebaseConfig.getProducts('Products', query);
       dispatch(loadStop());
-      return products;
     } catch (error) {
       dispatch(loadStop());
       dispatch(getError(error));
@@ -62,11 +60,11 @@ const cartSlice = createSlice({
       state.total = total;
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchProducts.fulfilled, (state, action) => {
-      state.products = action.payload;
-    });
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(fetchProducts.fulfilled, (state, action) => {
+  //     state.products = action.payload;
+  //   });
+  // },
 });
 
 // console.log(cartSlice);

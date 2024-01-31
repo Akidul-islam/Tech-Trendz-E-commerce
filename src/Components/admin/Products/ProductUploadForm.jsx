@@ -11,10 +11,10 @@ import {
   addVariant,
 } from '../../../Redux/features/ProductFormSlice';
 import { useState } from 'react';
-import firebaseConfig from '../../../../firebase.config';
 import { loadStart, loadStop } from '../../../Redux/features/ModalSlice';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { productValidate } from '../../../service/validationSchema';
+import { productSdk } from '../../../service/api/product';
 
 const ProductUploadForm = () => {
   const {
@@ -32,7 +32,7 @@ const ProductUploadForm = () => {
     formState: { errors },
     watch,
   } = useForm({
-    // resolver: yupResolver(productValidate()),
+    resolver: yupResolver(productValidate()),
     mode: 'onChange',
   });
   const dispatch = useDispatch();
@@ -72,7 +72,7 @@ const ProductUploadForm = () => {
     data.variants = variantOption || [];
     try {
       dispatch(loadStart());
-      await firebaseConfig.ProductUpload(data);
+      await productSdk.ProductUpload(data);
       dispatch(loadStop());
     } catch (error) {
       dispatch(loadStop());

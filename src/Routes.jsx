@@ -1,7 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
-import LoginPage from './Pages/LoginPage';
-import SignUpPage from './Pages/SignUpPage';
-import HomePage from './Pages/HomePage';
+import LoginPage from './Pages/auth/LoginPage';
+import SignUpPage from './Pages/auth/SignUpPage';
 import ProductPage from './Pages/ProductPage';
 import BestSellingPage from './Pages/BestSellingPage';
 import EventsPage from './Pages/EventsPage';
@@ -43,7 +42,7 @@ import SellerForgetPasswordPage from './Pages/SellerForgetPasswordPage';
 
 // PrivateRoutes
 
-// page list
+//admin page list
 import {
   NotDashboard,
   Overview,
@@ -58,16 +57,14 @@ import PrivateRoutes from './Components/common/PrivateRoute';
 // layout
 import DashboardLayout from './layout/DashboardLayout';
 import HomeLayout from './layout/HomeLayout';
+import HomePage from './Pages/home/HomePage';
+import ProductDetails from './Pages/home/ProductDetails';
 
 export const routes = createBrowserRouter([
   {
     path: '/',
     element: <HomeLayout />,
     children: [
-      {
-        path: '',
-        element: <HomePage />,
-      },
       {
         path: 'login',
         element: <LoginPage />,
@@ -79,6 +76,15 @@ export const routes = createBrowserRouter([
       {
         path: 'forget-password',
         element: <ForgetPasswordPage />,
+      },
+      {
+        path: '',
+        element: <HomePage />,
+      },
+
+      {
+        path: 'product/:id',
+        element: <ProductDetails />,
       },
     ],
   },

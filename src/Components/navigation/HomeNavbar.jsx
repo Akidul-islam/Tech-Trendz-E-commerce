@@ -146,7 +146,7 @@ const HomeNavber = () => {
   }, []);
   return (
     <>
-      <Navbar className='mx-auto z-10  max-w-screen fixed px-4 py-3 rounded-none'>
+      <Navbar className='mx-auto z-10  max-w-screen  px-4 py-3 rounded-none'>
         <div className='flex items-center justify-between'>
           <RouterLink to={'/'}>
             <Typography

@@ -10,4 +10,26 @@ export const theme = {
       },
     },
   },
+  tabsHeader: {
+    styles: {
+      base: {
+        bg: 'bg-gray-300',
+        bgOpacity: 'bg-opacity-60',
+        borderRadius: 'rounded-md',
+        p: 'p-1',
+      },
+    },
+  },
+  tab: {
+    styles: {
+      base: {
+        tab: {
+          initial: {
+            fontWeight: 'font-medium',
+            text: 'text-gray-900/80',
+          },
+        },
+      },
+    },
+  },
 };

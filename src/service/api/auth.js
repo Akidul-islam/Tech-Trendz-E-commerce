@@ -1,7 +1,5 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
+import { FirebaseApp } from './firebase.config';
 import {
-  getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
@@ -16,44 +14,13 @@ import {
   updateEmail,
   updatePassword,
 } from 'firebase/auth';
-import {
-  getFirestore,
-  getDoc,
-  setDoc,
-  doc,
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-  onSnapshot,
-} from 'firebase/firestore';
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from 'firebase/storage';
-const firebaseConfig = {
-  apiKey: 'AIzaSyATVqyjX-6l2l7CS3hlYikEE_97ZUQrRh4',
-  authDomain: 'e-commerce-2ffe8.firebaseapp.com',
-  projectId: 'e-commerce-2ffe8',
-  storageBucket: 'e-commerce-2ffe8.appspot.com',
-  messagingSenderId: '639609035969',
-  appId: '1:639609035969:web:c9b630affeb07ce9140840',
-  measurementId: 'G-YQENDHMBS7',
-};
+// database built-in method from firebase provied
+import { dbMethod } from './common';
 
-// firebase service
-class Firebase {
-  constructor(config) {
-    this.app = initializeApp(config);
-    this.auth = getAuth(this.app);
-    this.database = getFirestore(this.app);
-    this.storage = getStorage(this.app);
+class AuthSdk extends FirebaseApp {
+  constructor() {
+    super();
   }
-  // createUser email/password
   async register({
     email,
     password,
@@ -68,8 +35,11 @@ class Firebase {
       email,
       password
     );
-    // download url
-    const photoURL = await this.imageUpload(avater, pathName);
+    /**  download url
+     * @param avater
+     * @param pathName is unique
+     */
+    const photoURL = await dbMethod.imageUpload(avater, pathName);
 
     // profile update
     await updateProfile(this.auth.currentUser, {
@@ -78,7 +48,7 @@ class Firebase {
       phoneNumber,
     });
     //   user profile create
-    await this.addModelByID('Users', user.uid, {
+    await dbMethod.addModelByID('Users', user.uid, {
       userId: user.uid,
       name: user.displayName || displayName,
       email: user.email,
@@ -129,7 +99,7 @@ class Firebase {
     let imgUrl = '';
     if (avater) {
       const storeRef = `Users/${avater}`;
-      imgUrl = await this.imageUpload(avater, storeRef);
+      imgUrl = await dbMethod.imageUpload(avater, storeRef);
     }
     await updateProfile(user, {
       photoURL: imgUrl || user.photoURL,
@@ -142,7 +112,7 @@ class Firebase {
   async googleLogin() {
     const provider = new GoogleAuthProvider();
     const { user } = await signInWithPopup(this.auth, provider);
-    await this.addModelByID('users', user.uid, {
+    await dbMethod.addModelByID('users', user.uid, {
       userId: user.uid,
       name: user.displayName,
       email: user.email,
@@ -200,85 +170,6 @@ class Firebase {
     await signOut(this.auth);
     await setPersistence(this.auth, browserSessionPersistence);
   }
-
-  // addDoc and set ID manually
-  addModelByID(model, docId, data) {
-    return setDoc(doc(this.database, model, docId), data);
-  }
-
-  // add doc and ID auto generate
-  addModel(model, data) {
-    return addDoc(collection(this.database, model), data);
-  }
-
-  // getData by id
-  async getDocById(model, docId) {
-    const user = await getDoc(doc(this.database, model, docId));
-    // if(!user.exists) return console.log()
-    return user.data();
-  }
-
-  // get all products
-  async getProducts(model) {
-    return new Promise((resolve, reject) => {
-      const q = query(collection(this.database, model));
-      const unsubscribe = onSnapshot(
-        q,
-        (query) => {
-          let productList = [];
-          query.forEach((product) => {
-            productList.push({ ...product.data(), product_id: product.id });
-          });
-          resolve(productList);
-        },
-        (error) => {
-          reject(error);
-        }
-      );
-      return unsubscribe;
-    });
-  }
-
-  // upload single image
-  async imageUpload(file, pathName) {
-    if (!file) {
-      return;
-    }
-    const storageRef = ref(this.storage, pathName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    await new Promise((resolve, reject) => {
-      uploadTask.on(
-        'state_changed',
-        () => {},
-        (error) => {
-          reject(error);
-        },
-        () => {
-          resolve();
-        }
-      );
-    });
-    const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-    return downloadURL;
-  }
-
-  async ProductUpload(product) {
-    delete product.type;
-    delete product.value;
-    let url = [];
-    if (product.images) {
-      const items = Array.from(product.images);
-      url = await Promise.all(
-        items.map(
-          async (file) => await this.imageUpload(file, `Images/${file.name}`)
-        )
-      );
-    }
-
-    // upload product
-    await this.addModel('Products', { ...product, images: url });
-  }
 }
 
-export default new Firebase(firebaseConfig);
+export const authSdk = new AuthSdk();

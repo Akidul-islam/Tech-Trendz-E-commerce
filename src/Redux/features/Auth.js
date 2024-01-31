@@ -1,14 +1,14 @@
 // authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Firebase from '../../../firebase.config';
+import { authSdk } from '../../service/api/auth';
 import { onAuthStateChanged } from 'firebase/auth';
 
 export const API = {
   signupUser: createAsyncThunk('auth/signup', async (data, thunkAPI) => {
     try {
-      const results = await Firebase.register(data);
+      const results = await authSdk.register(data);
       // You can customize the user data and update it to Firestore here if needed
-      const user = await Firebase.getDocById('Users', results.uid);
+      const user = await authSdk.getDocById('Users', results.uid);
       return user;
     } catch (error) {
       error.message = 'email/password already exits';
@@ -17,11 +17,11 @@ export const API = {
   }),
   loginUser: createAsyncThunk('auth/login', async (creadiential, thunkAPI) => {
     try {
-      const result = await Firebase.login(
+      const result = await authSdk.login(
         creadiential.email,
         creadiential.password
       );
-      const user = await Firebase.getDocById('Users', result.uid);
+      const user = await authSdk.getDocById('Users', result.uid);
       return user;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -31,9 +31,9 @@ export const API = {
   getUser: createAsyncThunk('auth/getUser', async (data, thunkAPI) => {
     // let user;
     try {
-      // await setPersistence(Firebase.auth, browserSessionPersistence);
+      // await setPersistence(authSdk.auth, browserSessionPersistence);
       const results = await new Promise((resolve, reject) => {
-        const unsubscribe = onAuthStateChanged(Firebase.auth, (user) => {
+        const unsubscribe = onAuthStateChanged(authSdk.auth, (user) => {
           unsubscribe(); // Unsubscribe after receiving the user object
           if (user) {
             resolve(user);
@@ -42,7 +42,7 @@ export const API = {
           }
         });
       });
-      const user = await Firebase.getDocById('Users', results.uid);
+      const user = await authSdk.getDocById('Users', results.uid);
       return user;
     } catch (error) {
       error.message = 'user doesnt found';
@@ -52,7 +52,7 @@ export const API = {
 
   logOutUser: createAsyncThunk('auth/logout', async (_, thunkAPI) => {
     try {
-      await Firebase.logOut();
+      await authSdk.logOut();
       return null;
     } catch (error) {
       console.log(error.message);
