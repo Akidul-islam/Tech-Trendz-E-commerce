@@ -131,4 +131,9 @@ export const routes = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path:"/customer",
+    element:<ProfilePage/>
+  }
 ]);
